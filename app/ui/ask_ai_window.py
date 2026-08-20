@@ -237,8 +237,8 @@ class AskAIWindow(QWidget):
         header.addWidget(title)
         header.addStretch()
 
-        self.btn_clear = TransparentPushButton("🗑️ 清空历史", self, FIF.DELETE)
-        self.btn_clear.clicked.connect(self.clear_conversation)
+        self.btn_clear = TransparentPushButton("清空历史", self, FIF.DELETE)
+        self.btn_clear.clicked.connect(self._on_clear_clicked)
         header.addWidget(self.btn_clear)
 
         main_layout.addLayout(header)
@@ -340,19 +340,52 @@ class AskAIWindow(QWidget):
 
         self._context_str = "\n".join(parts)
         self.ctx_label.setText(self._context_str or "（无特殊上下文）")
-        self.clear_conversation()
+        self.clear_conversation(show_welcome=True)
 
-        # Add welcoming assistant message
-        welcome_text = "您好！我是您的 AI 翻译助手。我已经加载了您当前选中的文字与翻译背景，您可以点击上方快捷气泡或在下方输入任何疑问。"
-        self._append_message(welcome_text, is_user=False)
+    def _on_clear_clicked(self):
+        self.clear_conversation(show_welcome=True)
+        InfoBar.success(
+            title="已清空",
+            content="对话历史已成功清空",
+            orient=Qt.Orientation.Horizontal,
+            isClosable=True,
+            position=InfoBarPosition.TOP,
+            duration=2000,
+            parent=self,
+        )
 
-    def clear_conversation(self):
+    def clear_conversation(self, show_welcome: bool = False):
+        """Cleans up all messages, deletes orphaned child widgets, and prevents stacking."""
         self._history.clear()
-        while self.messages_layout.count() > 1:
+
+        # 1. Directly remove and delete all MessageBubble instances inside container
+        for bubble in self.messages_container.findChildren(MessageBubble):
+            bubble.setParent(None)
+            bubble.deleteLater()
+
+        # 2. Clear out all layout items and sub-layouts
+        while self.messages_layout.count() > 0:
             item = self.messages_layout.takeAt(0)
-            widget = item.widget()
-            if widget:
-                widget.deleteLater()
+            sub_layout = item.layout()
+            if sub_layout is not None:
+                while sub_layout.count() > 0:
+                    sub_item = sub_layout.takeAt(0)
+                    w = sub_item.widget()
+                    if w is not None:
+                        w.setParent(None)
+                        w.deleteLater()
+            w = item.widget()
+            if w is not None:
+                w.setParent(None)
+                w.deleteLater()
+
+        # 3. Restore bottom stretch spacer
+        self.messages_layout.addStretch()
+
+        # 4. Re-add welcome message if requested
+        if show_welcome:
+            welcome_text = "您好！我是您的 AI 翻译助手。我已经加载了您当前选中的文字与翻译背景，您可以点击上方快捷气泡或在下方输入任何疑问。"
+            self._append_message(welcome_text, is_user=False)
 
     def send_user_message(self, text: str):
         text = text.strip()

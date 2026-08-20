@@ -157,6 +157,20 @@ class TestPMFYCore(unittest.TestCase):
         ask_ai = get_ask_ai_window()
         self.assertIsNotNone(ask_ai)
 
+        # Test AskAI repeated context loading and complete message clearing
+        from app.ui.ask_ai_window import MessageBubble
+        ask_ai.set_context("Hello world 1", "你好世界 1")
+        ask_ai.set_context("Hello world 2", "你好世界 2")
+        ask_ai.set_context("Hello world 3", "你好世界 3")
+        self.assertEqual(len(ask_ai.messages_container.findChildren(MessageBubble)), 1)
+
+        ask_ai._append_message("用户提问测试", is_user=True)
+        ask_ai._append_message("### AI 回答\n- 条目1\n- 条目2", is_user=False)
+        self.assertEqual(len(ask_ai.messages_container.findChildren(MessageBubble)), 3)
+
+        ask_ai.clear_conversation(show_welcome=True)
+        self.assertEqual(len(ask_ai.messages_container.findChildren(MessageBubble)), 1)
+
         tray = SystemTray()
         self.assertIsNotNone(tray)
         print("[Test] All UI components, RadialMenu, AreaSnipping, and InputTranslationWindow instantiated successfully!")
