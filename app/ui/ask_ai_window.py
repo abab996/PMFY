@@ -11,6 +11,7 @@ from PyQt6.QtWidgets import (
     QScrollArea,
     QSizePolicy,
     QSpacerItem,
+    QTextBrowser,
     QVBoxLayout,
     QWidget,
 )
@@ -38,7 +39,7 @@ from app.ui.theme import ACCENT_COLOR
 
 
 class MessageBubble(QFrame):
-    """Chat message bubble for user and AI."""
+    """Chat message bubble for user and AI with full Markdown & code block rendering."""
 
     def __init__(self, text: str, is_user: bool, parent=None):
         super().__init__(parent)
@@ -46,7 +47,7 @@ class MessageBubble(QFrame):
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(12, 10, 12, 10)
-        layout.setSpacing(4)
+        layout.setSpacing(0)
 
         if is_user:
             self.setStyleSheet(f"""
@@ -55,12 +56,33 @@ class MessageBubble(QFrame):
                     border-radius: 12px;
                     border-bottom-right-radius: 2px;
                 }}
-                QLabel {{
-                    color: #FFFFFF;
-                    font-size: 13px;
-                    line-height: 1.4;
-                }}
             """)
+            css = """
+                body {
+                    font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+                    font-size: 13px;
+                    line-height: 1.45;
+                    color: #FFFFFF;
+                }
+                p { margin: 2px 0; }
+                code {
+                    font-family: 'Consolas', 'Courier New', monospace;
+                    background-color: rgba(255, 255, 255, 0.22);
+                    padding: 1px 4px;
+                    border-radius: 3px;
+                    font-size: 12px;
+                    color: #FFFFFF;
+                }
+                pre {
+                    font-family: 'Consolas', 'Courier New', monospace;
+                    background-color: rgba(0, 0, 0, 0.18);
+                    padding: 6px 8px;
+                    border-radius: 6px;
+                    margin: 4px 0;
+                    color: #FFFFFF;
+                }
+                a { color: #E0F2FE; text-decoration: underline; }
+            """
         else:
             self.setStyleSheet("""
                 QFrame {{
@@ -69,17 +91,92 @@ class MessageBubble(QFrame):
                     border-radius: 12px;
                     border-bottom-left-radius: 2px;
                 }}
-                QLabel {{
-                    color: #201F1E;
+            """)
+            css = """
+                body {
+                    font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
                     font-size: 13px;
                     line-height: 1.5;
-                }}
-            """)
+                    color: #201F1E;
+                }
+                h1, h2, h3, h4, h5, h6 {
+                    margin: 6px 0 3px 0;
+                    font-weight: bold;
+                    color: #111827;
+                }
+                h1 { font-size: 16px; }
+                h2 { font-size: 15px; }
+                h3 { font-size: 14px; }
+                h4 { font-size: 13px; }
+                p { margin: 3px 0; }
+                ul, ol { margin: 3px 0; padding-left: 18px; }
+                li { margin: 2px 0; }
+                code {
+                    font-family: 'Consolas', 'Courier New', monospace;
+                    background-color: #F3F4F6;
+                    color: #D946EF;
+                    padding: 1px 4px;
+                    border-radius: 4px;
+                    font-size: 12px;
+                    border: 1px solid #E5E7EB;
+                }
+                pre {
+                    font-family: 'Consolas', 'Courier New', monospace;
+                    background-color: #F8FAFC;
+                    padding: 8px 10px;
+                    border-radius: 6px;
+                    border: 1px solid #E2E8F0;
+                    margin: 6px 0;
+                    color: #0F172A;
+                }
+                blockquote {
+                    border-left: 3px solid #0078D4;
+                    margin: 4px 0;
+                    padding-left: 8px;
+                    color: #64748B;
+                    background-color: #F8FAFC;
+                }
+                table {
+                    border-collapse: collapse;
+                    margin: 6px 0;
+                    width: 100%;
+                }
+                th, td {
+                    border: 1px solid #E2E8F0;
+                    padding: 4px 8px;
+                    font-size: 12px;
+                }
+                th {
+                    background-color: #F1F5F9;
+                    font-weight: bold;
+                }
+                a { color: #0078D4; text-decoration: none; }
+                hr { border: none; border-top: 1px solid #E2E8F0; margin: 6px 0; }
+            """
 
-        self.label = QLabel(text, self)
-        self.label.setWordWrap(True)
-        self.label.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
-        layout.addWidget(self.label)
+        self.browser = QTextBrowser(self)
+        self.browser.setOpenExternalLinks(True)
+        self.browser.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.browser.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.browser.setFrameShape(QFrame.Shape.NoFrame)
+        self.browser.setStyleSheet("background: transparent; border: none;")
+        self.browser.document().setDocumentMargin(0)
+        self.browser.document().setDefaultStyleSheet(css)
+        self.browser.setMarkdown(text)
+
+        self.setMaximumWidth(440)
+        layout.addWidget(self.browser)
+        self._update_height()
+
+    def _update_height(self):
+        doc_w = self.width() - 24 if self.width() > 24 else 380
+        self.browser.document().setTextWidth(doc_w)
+        h = int(self.browser.document().size().height())
+        self.browser.setFixedHeight(max(22, h + 6))
+
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        self._update_height()
 
 
 class AskAIWindow(QWidget):
