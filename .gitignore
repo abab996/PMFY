@@ -18,6 +18,11 @@ config.json
 *.jpg
 *.jpeg
 
+# Build & Packaging outputs
+build/
+dist/
+dist_installer/
+
 # IDE & Editor files
 .idea/
 .vscode/
