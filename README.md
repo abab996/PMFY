@@ -1,11 +1,11 @@
-# PMFY (拼音母语飞跃) - Windows 11 全局原生智能 AI 桌面翻译套件
+# PMFY (拼音母语飞跃) - 全局原生智能 AI 桌面翻译套件 (Windows 10 / 11)
 
 <p align="center">
-  <img src="docs/banner.png" alt="PMFY - Windows 11 Global AI Translation Suite" width="100%" />
+  <img src="docs/banner.png" alt="PMFY - Global AI Translation Studio" width="100%" />
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Platform-Windows%2010%20%7C%2011%20(64--bit)-0078D4?style=for-the-badge&logo=windows11&logoColor=white" alt="Platform" />
+  <img src="https://img.shields.io/badge/Platform-Windows%2010%20%7C%2011%20(64--bit)-0078D4?style=for-the-badge&logo=windows&logoColor=white" alt="Platform" />
   <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python Version" />
   <img src="https://img.shields.io/badge/UI-Fluent%20Design%20Acrylic-0078D4?style=for-the-badge&logo=fluent" alt="UI" />
   <img src="https://img.shields.io/badge/OCR-RapidOCR%20(Offline%20ONNX)-FF6F00?style=for-the-badge" alt="OCR" />
@@ -13,7 +13,7 @@
   <img src="https://img.shields.io/badge/License-MIT-2ea44f?style=for-the-badge" alt="License" />
 </p>
 
-> **PMFY** 是一款专为 Windows 11 深度打造的现代化、高颜值全局 AI 智能翻译桌面应用。深度融入 Fluent Design 亚克力视觉语言，基于离线 RapidOCR 高速文字检测与顶级 AI 大模型，首创**光标 5 方位快捷轮盘**、**选区截屏原位图像重绘**、**全屏沉浸式翻译**、**划词防误触秒翻**、**独立双语工作台**与**“问 AI”多轮深度导师**。
+> **PMFY** 是一款专为 Windows 平台（全面兼容 Windows 10 与 Windows 11）打造的现代化、高颜值全局 AI 智能翻译桌面应用。融合 Fluent Design 极简设计语言，基于离线 RapidOCR 高速文字检测与顶级 AI 大模型，首创**光标 5 方位快捷轮盘**、**选区截屏原位图像重绘**、**全屏沉浸式翻译**、**划词防误触秒翻**、**独立双语工作台**与**“问 AI”多轮深度导师**。
 
 ---
 
@@ -43,7 +43,7 @@
 | **划词双模式 (立即弹窗 / 悬浮球)** | ✅ **支持轮盘一键即时切换** | ❌ 无 | ❌ 固定悬浮 | ❌ 固定悬浮 | ❌ 无 |
 | **Windows UIA 选区嗅探防误触** | ✅ **零误触机制** | ❌ 易误触 | ❌ 易误触 | ⚠️ 基础位移过滤 | ❌ 无 |
 | **大模型提示词预设 (学术/技术/游戏)** | ✅ **5 种专业预设** | ❌ 仅预设术语表 | ⚠️ 基础自定义 | ⚠️ 基础自定义 | ❌ 无 |
-| **Windows 11 Fluent 亚克力原生设计** | ✅ **高颜值毛玻璃视效** | ❌ 传统 UI | ❌ 网页样式 | ⚠️ 跨平台通用 UI | ❌ 经典老旧 UI |
+| **现代 Fluent Design 极简设计** | ✅ **高颜值毛玻璃与极简卡片** | ❌ 传统 UI | ❌ 网页样式 | ⚠️ 跨平台通用 UI | ❌ 经典老旧 UI |
 
 ---
 
