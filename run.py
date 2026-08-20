@@ -67,7 +67,11 @@ def main():
     app.setFont(font)
 
     # Set default app icon
-    app_icon = QIcon(create_tray_icon_pixmap())
+    ico_path = os.path.join(os.path.dirname(__file__), "app", "resources", "icon.ico")
+    if os.path.exists(ico_path):
+        app_icon = QIcon(ico_path)
+    else:
+        app_icon = QIcon(create_tray_icon_pixmap())
     app.setWindowIcon(app_icon)
 
     # Create Main Application Coordinator

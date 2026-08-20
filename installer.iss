@@ -29,6 +29,7 @@ DisableProgramGroupPage=yes
 PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
 ArchitecturesInstallIn64BitMode=x64compatible
+SetupIconFile=app\resources\icon.ico
 UninstallDisplayIcon={app}\{#MyAppExeName}
 
 [Languages]

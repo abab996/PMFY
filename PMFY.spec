@@ -5,13 +5,14 @@ from PyInstaller.utils.hooks import collect_data_files, collect_submodules
 
 block_cipher = None
 
-# Collect all essential data files (ONNX models, phonetic DBs, fonts, QSS)
+# Collect all essential data files (ONNX models, phonetic DBs, fonts, QSS, icons)
 datas = []
 datas += collect_data_files('rapidocr_onnxruntime')
 datas += collect_data_files('eng_to_ipa')
 datas += collect_data_files('pypinyin')
 datas += collect_data_files('qfluentwidgets')
 datas.append(('config.example.json', '.'))
+datas.append(('app/resources', 'app/resources'))
 
 # Collect hidden modules
 hiddenimports = [
@@ -68,6 +69,7 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
+    icon='app/resources/icon.ico',
 )
 
 coll = COLLECT(
