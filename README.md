@@ -1,6 +1,10 @@
 # PMFY (拼音母语飞跃) - Windows 11 全局原生智能 AI 桌面翻译套件
 
 <p align="center">
+  <img src="docs/banner.png" alt="PMFY - Windows 11 Global AI Translation Suite" width="100%" />
+</p>
+
+<p align="center">
   <img src="https://img.shields.io/badge/Platform-Windows%2010%20%7C%2011%20(64--bit)-0078D4?style=for-the-badge&logo=windows11&logoColor=white" alt="Platform" />
   <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python Version" />
   <img src="https://img.shields.io/badge/UI-Fluent%20Design%20Acrylic-0078D4?style=for-the-badge&logo=fluent" alt="UI" />
