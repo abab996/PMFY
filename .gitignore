@@ -1,0 +1,31 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environment
+.venv/
+venv/
+ENV/
+env/
+
+# Sensitive user config containing API keys
+config.json
+
+# Logs and runtime exports
+*.log
+*.png
+*.jpg
+*.jpeg
+
+# IDE & Editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Operating System
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store

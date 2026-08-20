@@ -1,0 +1,50 @@
+{
+  "api": {
+    "provider": "openai",
+    "base_url": "https://api.openai.com/v1",
+    "api_key": "",
+    "model": "gpt-4o-mini",
+    "temperature": 0.3,
+    "max_tokens": 2048,
+    "max_concurrency": 0,
+    "enable_vision": false,
+    "prompt_preset": "general"
+  },
+  "modules": {
+    "enable_translation": true,
+    "enable_explanation": true,
+    "enable_examples": true
+  },
+  "translation": {
+    "target_language": "zh-CN",
+    "auto_pronounce": false,
+    "show_pinyin_ipa": true,
+    "full_page_context": true
+  },
+  "selection": {
+    "enabled": true,
+    "instant_mode": false,
+    "hover_delay": 0.15,
+    "stay_duration": 4.5,
+    "circle_size": 32
+  },
+  "hotkeys": {
+    "radial_menu": "Ctrl+Win+Alt",
+    "area_snipping": "",
+    "input_translation": "",
+    "fullscreen": ""
+  },
+  "fullscreen": {
+    "hotkey": "Ctrl+Win+Alt",
+    "in_place_replace": true,
+    "ocr_lang": "ch_ppocr_v4"
+  },
+  "appearance": {
+    "theme": "Auto",
+    "acrylic": true
+  },
+  "general": {
+    "auto_start": false,
+    "minimize_to_tray": true
+  }
+}
