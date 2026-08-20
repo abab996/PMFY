@@ -26,6 +26,7 @@ from qfluentwidgets import (
     PrimaryPushButton,
     PushButton,
     SegmentedWidget,
+    DoubleSpinBox,
     SpinBox,
     SwitchButton,
     TitleLabel,
@@ -40,6 +41,7 @@ from qfluentwidgets import (
 
 from app.config import config_manager
 from app.core.ai_client import ai_client, PROMPT_PRESETS
+from app.utils.autostart import is_autostart_enabled, set_autostart
 
 
 class FluentSettingCard(CardWidget):
@@ -443,6 +445,33 @@ class SettingsWindow(QWidget):
         )
         layout.addWidget(card_sel)
 
+        # 6. Bubble Size Setting
+        self.spin_bubble_size = SpinBox()
+        self.spin_bubble_size.setRange(20, 64)
+        self.spin_bubble_size.setValue(32)
+        self.spin_bubble_size.setFixedWidth(140)
+        card_bsize = FluentSettingCard(
+            "划词悬浮球尺寸 (Circle Size)",
+            "调整鼠标选区释放后显示的蓝色小圆圈直径大小（单位: px，默认：32 px）",
+            self.spin_bubble_size,
+            scroll.widget(),
+        )
+        layout.addWidget(card_bsize)
+
+        # 7. Hover Delay Setting
+        self.spin_hover_delay = DoubleSpinBox()
+        self.spin_hover_delay.setRange(0.05, 1.50)
+        self.spin_hover_delay.setSingleStep(0.05)
+        self.spin_hover_delay.setValue(0.15)
+        self.spin_hover_delay.setFixedWidth(140)
+        card_hdelay = FluentSettingCard(
+            "悬浮球鼠标悬停触发延时 (Hover Delay)",
+            "鼠标移动到蓝色小圆圈上停留多长时间后自动触发翻译（单位: 秒，默认：0.15 秒）",
+            self.spin_hover_delay,
+            scroll.widget(),
+        )
+        layout.addWidget(card_hdelay)
+
         layout.addStretch()
         self.stacked_widget.addWidget(scroll)
 
@@ -452,10 +481,20 @@ class SettingsWindow(QWidget):
     def _init_about_page(self):
         scroll, layout = self._create_scrollable_page()
 
-        group_title = SubtitleLabel("关于与界面外观", scroll.widget())
+        group_title = SubtitleLabel("常规设置与界面外观", scroll.widget())
         layout.addWidget(group_title)
 
-        # 1. Theme
+        # 1. Autostart Switch
+        self.switch_autostart = SwitchButton()
+        card_auto = FluentSettingCard(
+            "开机自动启动 (Auto Start)",
+            "系统开机登录时自动在后台静默启动 PMFY 并常驻任务栏托盘",
+            self.switch_autostart,
+            scroll.widget(),
+        )
+        layout.addWidget(card_auto)
+
+        # 2. Theme
         self.theme_combo = ComboBox()
         self.theme_combo.addItems(["浅色 (Light)", "深色 (Dark)", "跟随系统 (Auto)"])
         self.theme_combo.setFixedWidth(180)
@@ -467,13 +506,13 @@ class SettingsWindow(QWidget):
         )
         layout.addWidget(card_theme)
 
-        # 2. Version Card
-        ver_badge = PushButton("v1.2.0 专业版")
+        # 3. Version Card
+        ver_badge = PushButton("v1.3.0 专业版")
         ver_badge.setEnabled(False)
         ver_badge.setFixedWidth(120)
         card_ver = FluentSettingCard(
             "PMFY 全局智能翻译桌面应用",
-            "集成 OpenAI/Claude 多协议、划词悬停、全屏原位重绘、多模态 Vision 与问 AI 深度对话系统",
+            "集成 OpenAI/Claude 多协议、快捷轮盘、选区原位重绘、全屏沉浸翻译与问 AI 深度对话系统",
             ver_badge,
             scroll.widget(),
         )
@@ -565,6 +604,11 @@ class SettingsWindow(QWidget):
         sel_cfg = config_manager.get("selection", default={})
         self.switch_instant.setChecked(bool(sel_cfg.get("instant_mode", False)))
         self.switch_selection.setChecked(bool(sel_cfg.get("enabled", True)))
+        self.spin_bubble_size.setValue(int(sel_cfg.get("circle_size", 32)))
+        self.spin_hover_delay.setValue(float(sel_cfg.get("hover_delay", 0.15)))
+
+        # General & Autostart
+        self.switch_autostart.setChecked(is_autostart_enabled())
 
     def _on_test_api_clicked(self):
         prov_idx = self.provider_combo.currentIndex()
@@ -674,6 +718,15 @@ class SettingsWindow(QWidget):
         config_manager.update_section("selection", {
             "enabled": self.switch_selection.isChecked(),
             "instant_mode": self.switch_instant.isChecked(),
+            "circle_size": self.spin_bubble_size.value(),
+            "hover_delay": round(self.spin_hover_delay.value(), 2),
+        })
+
+        # Autostart Windows Registry
+        autostart_on = self.switch_autostart.isChecked()
+        set_autostart(autostart_on)
+        config_manager.update_section("general", {
+            "auto_start": autostart_on,
         })
 
         config_manager.save_config()

@@ -161,6 +161,31 @@ class TestPMFYCore(unittest.TestCase):
         self.assertIsNotNone(tray)
         print("[Test] All UI components, RadialMenu, AreaSnipping, and InputTranslationWindow instantiated successfully!")
 
+    def test_07_autostart_and_bubble_settings(self):
+        """Test autostart detection and dynamic selection bubble sizing."""
+        from PyQt6.QtWidgets import QApplication
+        from app.utils.autostart import is_autostart_enabled, get_launch_command
+        from app.ui.selection_bubble import SelectionBubble
+
+        qapp = QApplication.instance() or QApplication(sys.argv)
+
+        cmd = get_launch_command()
+        self.assertTrue(len(cmd) > 0)
+
+        # Check autostart read without crashing
+        status = is_autostart_enabled()
+        self.assertIsInstance(status, bool)
+
+        # Check dynamic bubble configuration
+        config_manager.set("selection", "circle_size", 40)
+        config_manager.set("selection", "hover_delay", 0.25)
+
+        bubble = SelectionBubble()
+        bubble.reload_config()
+        self.assertEqual(bubble._diameter, 40)
+        self.assertEqual(bubble._hover_delay, 0.25)
+        self.assertEqual(bubble.width(), 40 + 16)
+
 
 if __name__ == "__main__":
     unittest.main()

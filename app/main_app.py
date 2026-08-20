@@ -143,6 +143,7 @@ class PMFYApplication(QObject):
 
     def _on_settings_saved(self):
         hotkey_manager.reload_hotkeys()
+        self.selection_bubble.reload_config()
 
         sel_enabled = config_manager.get("selection", "enabled", True)
         mouse_hook.set_enabled(sel_enabled)
