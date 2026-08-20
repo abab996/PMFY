@@ -12,11 +12,11 @@ env/
 # Sensitive user config containing API keys
 config.json
 
-# Logs and runtime exports
+# Logs and temporary runtime exports
 *.log
-*.png
-*.jpg
-*.jpeg
+area_translated.png
+fullscreen_translated.png
+*.tmp
 
 # Build & Packaging outputs
 build/
