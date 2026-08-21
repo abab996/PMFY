@@ -2,6 +2,8 @@ import ctypes
 import time
 from typing import Optional
 
+from app.utils.window_utils import is_console_window
+
 user32 = ctypes.windll.user32
 kernel32 = ctypes.windll.kernel32
 
@@ -75,7 +77,13 @@ def get_selected_text_via_clipboard(timeout: float = 0.15) -> Optional[str]:
     if uia_text and len(uia_text.strip()) > 0:
         return uia_text.strip()
 
-    # 2. Backup existing clipboard content
+    # 2. SAFETY GUARD: In Console / Terminal / CLI windows (cmd.exe, Windows Terminal, ConEmu, Mintty):
+    # NEVER send blind Ctrl+C because Ctrl+C transmits SIGINT and terminates running CLI processes!
+    fg_hwnd = user32.GetForegroundWindow()
+    if is_console_window(fg_hwnd):
+        return None
+
+    # 3. Backup existing clipboard content
     old_clipboard_text = None
     try:
         win32clipboard.OpenClipboard()

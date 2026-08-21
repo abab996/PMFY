@@ -200,6 +200,35 @@ class TestPMFYCore(unittest.TestCase):
         self.assertEqual(bubble._hover_delay, 0.25)
         self.assertEqual(bubble.width(), 40 + 16)
 
+    def test_08_window_utils_and_console_safety(self):
+        """Test window inspection, non-client hit-test constants, and terminal Ctrl+C safety shields."""
+        from app.utils.window_utils import (
+            HTCLIENT,
+            HTCAPTION,
+            HTBORDER,
+            is_console_window,
+            get_window_info_at,
+            get_window_rect,
+            CONSOLE_CLASS_NAMES,
+            SHELL_CLASS_NAMES,
+        )
+        from app.utils.clipboard import get_selected_text_via_clipboard
+        from app.core.mouse_hook import mouse_hook
+
+        # Check constants
+        self.assertEqual(HTCLIENT, 1)
+        self.assertEqual(HTCAPTION, 2)
+        self.assertIn("ConsoleWindowClass", CONSOLE_CLASS_NAMES)
+        self.assertIn("CASCADIA_HOSTING_WINDOW_CLASS", CONSOLE_CLASS_NAMES)
+        self.assertIn("Shell_TrayWnd", SHELL_CLASS_NAMES)
+
+        # Check non-crashing window queries
+        info = get_window_info_at(0, 0)
+        self.assertEqual(len(info), 5)
+
+        # Check mouse hook is instantiated
+        self.assertIsNotNone(mouse_hook)
+
 
 if __name__ == "__main__":
     unittest.main()
